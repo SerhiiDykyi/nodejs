@@ -1,0 +1,28 @@
+{
+  "name": "nodejs",
+  "version": "0.0.1",
+  "description": "node js homework 1 ",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "dev": "nodemon ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SerhiiDykyi/nodejs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SerhiiDykyi/nodejs/issues"
+  },
+  "homepage": "https://github.com/SerhiiDykyi/nodejs#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "yargs": "^15.4.1"
+  }
+}
