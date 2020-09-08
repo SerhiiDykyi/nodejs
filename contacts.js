@@ -12,7 +12,9 @@ async function listContacts() {
 
 async function getContactById(contactId) {
   const contacts = await listContacts();
-  const contactById = contacts.find((contact) => contact.id === contactId);
+  const contactById = await contacts.find(
+    (contact) => contact.id === contactId
+  );
   return contactById;
 }
 
@@ -20,7 +22,7 @@ async function removeContact(contactId) {
   const contacts = await listContacts();
   const result = contacts.filter((contact) => contact.id !== contactId);
   const resultAsJSON = JSON.stringify(result);
-  fs.writeFile(contactsPath, resultAsJSON);
+  await fs.writeFile(contactsPath, resultAsJSON);
 }
 
 async function addContact(name, email, phone) {
@@ -34,7 +36,7 @@ async function addContact(name, email, phone) {
   };
   contacts.push(newContact);
   const contactAsJSON = JSON.stringify(contacts);
-  fs.writeFile(contactsPath, contactAsJSON);
+  await fs.writeFile(contactsPath, contactAsJSON);
 }
 
 module.exports = { listContacts, getContactById, removeContact, addContact };
