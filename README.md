@@ -9,3 +9,15 @@ npm install -g nodemon
 <!-- yargs -->
 
 npm i yargs
+
+<!-- express -->
+
+npm install express
+
+<!-- morgan -->
+
+npm i morgan
+
+<!-- cors -->
+
+npm i cors
