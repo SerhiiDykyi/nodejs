@@ -12,7 +12,7 @@ npm i yargs
 
 <!-- express -->
 
-npm install express
+npm install express -s
 
 <!-- morgan -->
 
@@ -25,3 +25,7 @@ npm i cors
 <!-- http -->
 
 npm i http -s
+
+<!-- dotenv -->
+
+npm i dotenv -s
