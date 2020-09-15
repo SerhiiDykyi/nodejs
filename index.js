@@ -1,64 +1,20 @@
-const http = require("http");
-const PORT = 3000;
-const argv = require("yargs").argv;
-const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-} = require("./contacts");
-const { response } = require("express");
+const dotenv = require('dotenv');
+dotenv.config();
+const PORT = process.env.PORT || 3000;
+const express = require('express');
+const contactsRouter = require('./router');
+const cors = require('cors');
+const app = express();
 
-const parsedBody = (request) => {
-  return new Promise((reselve, reject) => {
-    let body = [];
-    request
-      .on("data", (chank) => {
-        body.push(chank);
-      })
-      .on("end", () => {
-        const parsedBody = JSON.parse(body.toString());
-        reselve(parsedBody);
-      })
-      .on("err", (err) => {
-        reject(err);
-      });
-  });
-};
-
-const server = http.createServer(async (request, responce) => {
-  const { url, method } = request;
-  switch (url) {
-    case "/contacts":
-      switch (method) {
-        case "GET":
-          const contacts = await listContacts();
-          const parssedContacts = JSON.stringify(contacts);
-          responce.setHeader("Content-Type", "application/json");
-          responce.write(parssedContacts);
-          responce.end();
-          break;
-        case "POST":
-          const body = await parsedBody(request);
-          console.log(body);
-          await addContact(body);
-          responce.statusCode = 201;
-          responce.end();
-          break;
-        case "DELETE":
-          const { query } = request;
-          console.log(query);
-          responce.end();
-          break;
-      }
-      break;
-    default:
-      responce.write("<h1>not found</h1>");
-      responce.end();
-  }
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Header', '*');
+  res.setHeader('Access-Control-Allow-Method', '*');
+  next();
 });
 
-server.listen(3000, (error) => {
-  if (error) return console.error(error);
-  console.log(`Server works on port ${PORT}`);
-});
+app.use(express.json());
+
+app.use('/contacts', contactsRouter);
+
+app.listen(PORT, () => console.log(`Server worked/listening on ${PORT}`));

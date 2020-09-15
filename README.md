@@ -20,7 +20,7 @@ npm i morgan
 
 <!-- cors -->
 
-npm i cors
+npm i cors -s
 
 <!-- http -->
 
