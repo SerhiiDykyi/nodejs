@@ -1,5 +1,6 @@
 const fs = require('fs').promises;
 const path = require('path');
+const shortid = require('shortid');
 
 const contactsPath = path.resolve(__dirname, 'db', 'contacts.json');
 
@@ -25,7 +26,7 @@ async function removeContact(contactId) {
 
 async function addContact(id, name, email, phone) {
   const contacts = await listContacts();
-  // const id = contacts.length ? [...contacts].pop().id + 1 : 1;
+  const id = shortid();
   const newContact = {
     id,
     name,
@@ -38,19 +39,16 @@ async function addContact(id, name, email, phone) {
   return newContact;
 }
 
-async function updateContact(id, name, email, phone) {
+async function updateContact(id, body) {
   const contacts = await listContacts();
-  const targetContact = contacts.findIndex(contact => contact.id === id);
-  contacts[targetContact] = {
-    ...contacts[targetContact],
-    name,
-    email,
-    phone,
+  const indexById = await contacts.findIndex(contact => contact.id === id);
+  contacts[indexById] = {
+    ...contacts[indexById],
+    ...body,
   };
-  // contacts.push(contactByIdForChange);
   const contactAsJSON = JSON.stringify(contacts);
   await fs.writeFile(contactsPath, contactAsJSON);
-  return contacts[targetContact];
+  return contacts[indexById];
 }
 
 module.exports = {
