@@ -48,12 +48,19 @@ contactsRouter.delete('/:id', async (req, res) => {
 
 contactsRouter.patch('/:id', async (req, res) => {
   const { id, name, email, phone } = req.body;
-  if (name && email && phone) {
-    const contact = await updateContact(id, name, email, phone);
-    res.status(200).json(contact);
+  const contactById = await updateContact(id, name, email, phone);
+  // console.log(contactById);
+  if (!contactById) {
+    res.status(404).json({ message: 'Not found' });
     return;
   }
-  res.status(400).json({ message: 'missing required name field' });
+
+  // if (name && email && phone) {
+  //   const contact = await updateContact(id, name, email, phone);
+  //   res.status(200).json(contact);
+  //   return;
+  // }
+  // res.status(400).json({ message: 'missing fields' });
 });
 
 module.exports = contactsRouter;

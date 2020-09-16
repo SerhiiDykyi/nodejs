@@ -40,19 +40,17 @@ async function addContact(id, name, email, phone) {
 
 async function updateContact(id, name, email, phone) {
   const contacts = await listContacts();
-  let contactByIdForChange = await getContactById(id);
-  // const id = contacts.length ? [...contacts].pop().id + 1 : 1;
-
-  contactByIdForChange = {
-    id,
+  const targetContact = contacts.findIndex(contact => contact.id === id);
+  contacts[targetContact] = {
+    ...contacts[targetContact],
     name,
     email,
     phone,
   };
-  contacts.push(contactByIdForChange);
+  // contacts.push(contactByIdForChange);
   const contactAsJSON = JSON.stringify(contacts);
   await fs.writeFile(contactsPath, contactAsJSON);
-  return contactByIdForChange;
+  return contacts[targetContact];
 }
 
 module.exports = {
