@@ -26,9 +26,9 @@ contactsRouter.get('/:id', async (req, res) => {
 });
 
 contactsRouter.post('/', async (req, res) => {
-  const { name, email, phone } = req.body;
+  const { body } = req;
   if (name && email && phone) {
-    const contact = await addContact(name, email, phone);
+    const contact = await addContact(body);
     res.status(201).json(contact);
     return;
   }
@@ -50,6 +50,7 @@ contactsRouter.delete('/:id', async (req, res) => {
 
 contactsRouter.patch('/:id', async (req, res) => {
   const { id } = req.params;
+  const { body } = req;
   const contact = await getContactById(id);
   if (!contact) {
     res.status(404).json({ message: 'Not found' });
@@ -58,7 +59,7 @@ contactsRouter.patch('/:id', async (req, res) => {
 
   for (const key in req.body) {
     if (key) {
-      const contactUpdate = await updateContact(id, req.body);
+      const contactUpdate = await updateContact(id, body);
       res.status(201).json(contactUpdate);
       return;
     }
