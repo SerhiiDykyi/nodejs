@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "fs": "0.0.1-security",
+    "mongoose": "^5.10.5",
     "yargs": "^15.4.1"
   }
 }
