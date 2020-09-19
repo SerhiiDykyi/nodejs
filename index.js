@@ -1,32 +1,38 @@
-const argv = require("yargs").argv;
-const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-} = require("./contacts");
+const dotenv = require('dotenv');
+dotenv.config();
+const PORT = process.env.PORT || 3000;
+const express = require('express');
+const app = express();
+const contactsRouter = require('./router');
+const cors = require('cors');
 
-function invokeAction({ action, id, name, email, phone }) {
-  switch (action) {
-    case "list":
-      listContacts().then(console.table);
-      break;
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader('Access-Control-Allow-Headers', '*');
+//   res.setHeader('Access-Control-Allow-Methods', '*');
+//   next();
+// });
 
-    case "get":
-      getContactById(id).then(console.log);
-      break;
+app.use(express.json());
+app.use(cors({ origin: 'http://localhost:3000' }));
+// app.use(addAllowOriginHeader);
+// app.options('*', addCorsHeaders);
+app.use('/contacts', contactsRouter);
 
-    case "add":
-      addContact(name, email, phone);
-      break;
-
-    case "remove":
-      removeContact(id);
-      break;
-
-    default:
-      console.warn("\x1B[31m Unknown action type!");
-  }
+function addAllowOriginHeader(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  next();
+}
+function addCorsHeaders(req, res, next) {
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    req.headers['Access-control-request-method'],
+  );
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    req.headers['Access-control-request-headers'],
+  );
+  res.status(200).send();
 }
 
-invokeAction(argv);
+app.listen(PORT, () => console.log(`Server works on port ${PORT}`));
