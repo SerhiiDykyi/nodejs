@@ -36,8 +36,8 @@ const runServer = async (err, req, res) => {
         name: err.message,
       });
       logs = JSON.stringify(logs);
-      await fs.writeFile('errors.logs.json', logs);
       console.error(err);
+      return await fs.writeFile('errors.logs.json', logs);
     }
     console.log('No error');
   });

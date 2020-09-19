@@ -3,25 +3,16 @@ const contactsRouter = Router();
 
 const {
   gerContactController,
+  gerContactByIdController,
   createContactController,
   updateContactController,
   deleteContactController,
 } = require('./contacts.controller');
 contactsRouter.get('/', gerContactController);
+contactsRouter.get('/:contactId', gerContactByIdController);
 contactsRouter.post('/', createContactController);
 contactsRouter.patch('/', updateContactController);
 contactsRouter.delete('/:contactId', deleteContactController);
-
-// contactsRouter.get('/:id', async (req, res) => {
-//   const { id } = req.params;
-//   const contact = await getContactById(id);
-//   if (contact) {
-//     res.status(200).json(contact);
-//     return;
-//   }
-//   res.status(400).json({ message: 'Not found' });
-//   return;
-// });
 
 // contactsRouter.post('/', async (req, res) => {
 //   const { body } = req;

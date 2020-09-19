@@ -4,25 +4,26 @@ const contactSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
     },
     password: {
       type: String,
-      require: true,
+      required: true,
     },
     name: {
       type: String,
-      require: true,
-      default: 'NoName',
+      required: true,
+      unique: true,
     },
     phone: {
       type: String,
-      require: true,
-      default: 'NoNumber',
+      required: true,
     },
   },
-  { versionKey: false },
+  {
+    versionKey: false,
+  },
 );
 
 class Contact {
@@ -32,6 +33,10 @@ class Contact {
 
   getContacts = async query => {
     return await this.db.find(query);
+  };
+
+  getContactsById = async contactId => {
+    return await this.db.findById(contactId);
   };
 
   createContact = async contactData => {
