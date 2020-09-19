@@ -7,11 +7,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const contactsRouter = require('./api/contacts/router');
 
-const runServer = async () => {
+const runServer = async (err, req, res) => {
   await mongoose.connect(process.env.DB_URI, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
   });
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  }
   console.log('Database connection successful');
 
   const app = express();
