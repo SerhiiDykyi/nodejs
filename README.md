@@ -29,3 +29,5 @@ npm i http -s
 <!-- dotenv -->
 
 npm i dotenv -s
+
+npm i mongoose
