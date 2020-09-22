@@ -24,14 +24,12 @@ async function removeContact(contactId) {
   await fs.writeFile(contactsPath, resultAsJSON);
 }
 
-async function addContact(name, email, phone) {
+async function addContact(body) {
   const contacts = await listContacts();
   const id = shortid();
   const newContact = {
     id,
-    name,
-    email,
-    phone,
+    ...body,
   };
   contacts.push(newContact);
   const contactAsJSON = JSON.stringify(contacts);
