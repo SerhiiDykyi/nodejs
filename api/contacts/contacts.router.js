@@ -8,7 +8,12 @@ const {
   updateContactController,
   deleteContactController,
 } = require('./contacts.controller');
-contactsRouter.get('/', gerContactController);
+
+const {
+  checkAuthTokenMiddleware,
+} = require('../../middlewares/auth.middleware');
+
+contactsRouter.get('/', checkAuthTokenMiddleware, gerContactController);
 contactsRouter.get('/:contactId', gerContactByIdController);
 contactsRouter.post('/', createContactController);
 contactsRouter.patch('/', updateContactController);
