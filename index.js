@@ -6,7 +6,6 @@ const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const contactsRouter = require('./api/contacts/contacts.router');
-// const usersRouter = require('./api/users/users.router');
 const authRouter = require('./api/auth/auth.router');
 
 const runServer = async () => {
@@ -23,10 +22,9 @@ const runServer = async () => {
     app.use(express.json());
     app.use(cors({ origin: 'http://localhost:3000' }));
 
-    // app.use('/users', usersRouter);
-
     app.use('/contacts', contactsRouter);
     app.use('/auth', authRouter);
+    app.use('/users', authRouter);
 
     app.use(async (err, req, res, next) => {
       if (err) {

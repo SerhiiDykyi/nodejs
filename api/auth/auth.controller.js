@@ -2,22 +2,26 @@ const UserDB = require('./auth.model');
 const bcrypt = require('bcrypt');
 const { createVerificationToken } = require('../../services/token.service');
 
+const { registrationValidator } = require('./auth.validator');
+
 const registrationContoller = async (req, res, next) => {
   try {
     const { body } = req;
-    const hashedPassword = await bcrypt.hash(body.password, +process.env.SALT);
+    const data = await registrationValidator.validate(req.body);
+    res.json(data);
+    return;
+    const hachedPassword = await bcrypt.hash(body.password, +process.env.SALT);
     const newUser = await UserDB.createUser({
       ...body,
-      password: hashedPassword,
+      password: hachedPassword,
     });
     res.status(201).json({
       user: {
-        email: body.email,
-        subscription: body.subscription,
+        email: newUser.email,
+        subscription: newUser.subscription,
       },
     });
   } catch (error) {
-    console.log('error.message:', error.name);
     res.status(400).json({ message: 'missing required name field' });
 
     next(error);
@@ -54,7 +58,18 @@ const loginContoller = async (req, res, next) => {
   }
 };
 
+const getCurrentUserController = async (req, res, next) => {
+  try {
+    const { id: userId } = req.userInfo;
+    const currenUser = await UserDB.findUserById(userId);
+    res.json(currenUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registrationContoller,
   loginContoller,
+  getCurrentUserController,
 };

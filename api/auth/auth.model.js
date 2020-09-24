@@ -46,6 +46,10 @@ class User {
     return await this.db.findOne(query);
   };
 
+  findUserById = async userId => {
+    return await this.db.findById(userId);
+  };
+
   // updateContact = async (userId, userData) => {
   //   return await this.db.findByIdAndUpdate(userId, userData, {
   //     new: true,

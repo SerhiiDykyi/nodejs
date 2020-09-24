@@ -32,7 +32,16 @@ class Contact {
   }
 
   getContacts = async query => {
-    return await this.db.find(query);
+    const { sub: subscription } = query;
+    if (subscription) {
+      return await this.db.find({ subscription });
+    }
+    const { limit, page } = query;
+    const skipLimit = (page - 1) * limit;
+    return await this.db
+      .find()
+      .skip(skipLimit)
+      .limit(+limit);
   };
 
   getContactsById = async contactId => {

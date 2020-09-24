@@ -11,9 +11,15 @@ const {
 
 const {
   checkAuthTokenMiddleware,
+  checkUserSub,
 } = require('../../middlewares/auth.middleware');
 
-contactsRouter.get('/', checkAuthTokenMiddleware, gerContactController);
+contactsRouter.get(
+  '/',
+  checkAuthTokenMiddleware,
+  checkUserSub(['pro']),
+  gerContactController,
+);
 contactsRouter.get('/:contactId', gerContactByIdController);
 contactsRouter.post('/', createContactController);
 contactsRouter.patch('/', updateContactController);
