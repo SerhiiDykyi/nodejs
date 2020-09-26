@@ -11,18 +11,21 @@ const {
   checkAuthTokenMiddleware,
 } = require('../../middlewares/auth.middleware');
 
-const { registrationValidatorMiddleware } = require('./auth.validator');
+const {
+  registrationValidatorMiddleware,
+  loginValidatorMiddleware,
+} = require('./auth.validator');
 
 authRouter.post(
   '/register',
   registrationValidatorMiddleware,
   registrationContoller,
 );
-authRouter.post('/login', registrationValidatorMiddleware, loginContoller);
+authRouter.post('/login', loginValidatorMiddleware, loginContoller);
 authRouter.post('/logout', checkAuthTokenMiddleware, logoutContoller);
 authRouter.get(
   '/current',
-  registrationValidatorMiddleware,
+  loginValidatorMiddleware,
   checkAuthTokenMiddleware,
   getCurrentUserController,
 );

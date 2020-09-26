@@ -42,25 +42,11 @@ class User {
     return await this.db.findByIdAndUpdate(userId, userData, {
       new: true,
     });
-
-    // return await this.db.findByIdAndUpdate(userId, userData, {
-    //   new: true,
-    // });
   };
 
   findUserById = async userId => {
     return await this.db.findById(userId);
   };
-
-  // updateUser = async (userId, userData) => {
-  //   return await this.db.findByIdAndUpdate(userId, userData, {
-  //     new: true,
-  //   });
-  // };
-
-  // deleteContact = async userId => {
-  //   return await this.db.findByIdAndRemove(userId);
-  // };
 }
 
 module.exports = new User();

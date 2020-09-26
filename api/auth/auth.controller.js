@@ -5,6 +5,7 @@ const { createVerificationToken } = require('../../services/token.service');
 const registrationContoller = async (req, res, next) => {
   try {
     const { body } = req;
+    console.log(body);
     const hachedPassword = await bcrypt.hash(body.password, +process.env.SALT);
     const newUser = await UserDB.createUser({
       ...body,
@@ -36,9 +37,7 @@ const loginContoller = async (req, res, next) => {
     } = req;
     const user = await UserDB.findUserByEmail({ email });
     if (!user) {
-      return res
-        .status(400)
-        .json({ message: `missing required ${email} field` });
+      return res.status(400).json({ message: `Email or password is wrong` });
     }
     const isPasswordsEqual = await bcrypt.compare(password, user.password);
     if (!isPasswordsEqual) {

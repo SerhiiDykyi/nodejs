@@ -21,13 +21,4 @@ const checkAuthTokenMiddleware = async (req, res, next) => {
   }
 };
 
-const checkUserSub = subscription => async (req, res, next) => {
-  const isValideSub = subscription.includes(req.userInfo.subscription);
-  if (isValideSub) {
-    next();
-    return;
-  }
-  res.status(403).send('Fobidden');
-};
-
-module.exports = { checkAuthTokenMiddleware, checkUserSub };
+module.exports = { checkAuthTokenMiddleware };
