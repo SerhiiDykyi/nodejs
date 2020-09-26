@@ -30,14 +30,6 @@ class User {
     this.db = mongoose.model('Users', userSchema);
   }
 
-  // getContacts = async query => {
-  //   return await this.db.find(query);
-  // };
-
-  // getContactsById = async userId => {
-  //   return await this.db.findById(userId);
-  // };
-
   createUser = async userData => {
     return await this.db.create(userData);
   };
@@ -46,11 +38,21 @@ class User {
     return await this.db.findOne(query);
   };
 
+  updateUser = async (userId, userData) => {
+    return await this.db.findByIdAndUpdate(userId, userData, {
+      new: true,
+    });
+
+    // return await this.db.findByIdAndUpdate(userId, userData, {
+    //   new: true,
+    // });
+  };
+
   findUserById = async userId => {
     return await this.db.findById(userId);
   };
 
-  // updateContact = async (userId, userData) => {
+  // updateUser = async (userId, userData) => {
   //   return await this.db.findByIdAndUpdate(userId, userData, {
   //     new: true,
   //   });

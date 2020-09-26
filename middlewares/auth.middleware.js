@@ -4,19 +4,20 @@ const checkAuthTokenMiddleware = async (req, res, next) => {
   try {
     const token = req.get('Authorization');
     if (!token) {
-      return res.status(401).send('No token provided!!');
+      return res.status(401).send('Not authorized');
     }
     const data = await verifyToken(token);
-    req.userId = data.id;
+    req.user = data.id;
     const userInfo = await User.findUserById(data.id);
-    req.userInfo = {
+
+    req.user = {
       email: userInfo.email,
       id: userInfo._id,
       subscription: userInfo.subscription,
     };
     next();
   } catch (error) {
-    res.status(401).send('Invalid token!!');
+    res.status(401).send('Not authorized');
   }
 };
 

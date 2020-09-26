@@ -6,13 +6,23 @@ const registerSchema = Joi.object({
     .pattern(/^[a-zA-Z0-9]{8,16}$/)
     .required(),
   subscription: Joi.string().allow('free', 'pro', 'premium'),
-  token: Joi.string().allow(''),
+  token: Joi.string(),
 });
 
 const validationMiddleware = schema => async (req, res, next) => {
   const { error } = await schema.validate(req.body);
+  if (error) {
+    // const message = error.details.reduce((msg, nextError) => {
+    //   if (msg) {
+    //     return msg + ', ' + nextError.message;
+    //   }
+    //   return nextError.message;
+    // }, '');
+    res.status(400).send('Ошибка от валидационной библиотеки Joi');
+  }
+  next();
 };
 
 module.exports = {
-  registrationValidator: registerSchema,
+  registrationValidatorMiddleware: validationMiddleware(registerSchema),
 };

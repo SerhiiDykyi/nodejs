@@ -3,15 +3,29 @@ const authRouter = Router();
 const {
   registrationContoller,
   loginContoller,
+  logoutContoller,
   getCurrentUserController,
+  renewalSubContoller,
 } = require('./auth.controller');
 const {
   checkAuthTokenMiddleware,
-  checkUserSub,
 } = require('../../middlewares/auth.middleware');
 
-authRouter.post('/register', registrationContoller);
-authRouter.post('/login', loginContoller);
-authRouter.get('/current', checkAuthTokenMiddleware, getCurrentUserController);
+const { registrationValidatorMiddleware } = require('./auth.validator');
+
+authRouter.post(
+  '/register',
+  registrationValidatorMiddleware,
+  registrationContoller,
+);
+authRouter.post('/login', registrationValidatorMiddleware, loginContoller);
+authRouter.post('/logout', checkAuthTokenMiddleware, logoutContoller);
+authRouter.get(
+  '/current',
+  registrationValidatorMiddleware,
+  checkAuthTokenMiddleware,
+  getCurrentUserController,
+);
+authRouter.patch('/', checkAuthTokenMiddleware, renewalSubContoller);
 
 module.exports = authRouter;
