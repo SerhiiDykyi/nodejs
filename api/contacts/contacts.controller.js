@@ -38,8 +38,6 @@ const createContactController = async (req, res, next) => {
 const updateContactController = async (req, res, next) => {
   try {
     const { id, ...data } = req.body;
-    console.log(id);
-    console.log(data);
     const updatedContact = await ContactDB.updateContact(id, data);
     if (!updatedContact) {
       res.status(400).json({ message: 'Not found' });
