@@ -1,19 +1,24 @@
 const UserDB = require('./auth.model');
 const bcrypt = require('bcrypt');
 const { createVerificationToken } = require('../../services/token.service');
-
+const { avatar } = require('../../services/avatar.services');
 const registrationContoller = async (req, res, next) => {
   try {
     const { body } = req;
-    console.log(body);
+    const variant = 'female';
+    const image = await avatar.generate(`${body.email}`, variant);
+    image.png().toFile(`public/images/${body.email}.png`);
+
     const hachedPassword = await bcrypt.hash(body.password, +process.env.SALT);
     const newUser = await UserDB.createUser({
       ...body,
+      avatarURL: `http:3000/images/${body.email}.png`,
       password: hachedPassword,
     });
     res.status(201).json({
       user: {
         email: newUser.email,
+        avatarURL: newUser.avatarURL,
         subscription: newUser.subscription,
       },
     });
@@ -136,6 +141,35 @@ const renewalSubContoller = async (req, res, next) => {
     next(error);
   }
 };
+const uploadAvatarContoller = async (req, res, next) => {
+  try {
+    const {
+      user: { id },
+    } = req;
+    const { file } = req;
+
+    const userById = await UserDB.findUserById({ _id: id });
+
+    if (!userById.token) {
+      res.status(401).json({ message: 'No autorization' });
+      return;
+    }
+
+    if (!file) {
+      res.status(400).json({
+        message: `Avatar not found`,
+      });
+      return;
+    }
+    const avatarURL = `http://localhost:3000/images/${file.filename}`;
+    const renewalUserSub = await UserDB.updateUser(userById._id, {
+      avatarURL,
+    });
+    return res.status(200).json(renewalUserSub);
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   registrationContoller,
@@ -143,4 +177,5 @@ module.exports = {
   logoutContoller,
   getCurrentUserController,
   renewalSubContoller,
+  uploadAvatarContoller,
 };
