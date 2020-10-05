@@ -7,7 +7,7 @@ const checkAuthTokenMiddleware = async (req, res, next) => {
       return res.status(401).send('Not authorized');
     }
     const data = await verifyToken(token);
-    req.user = data.id;
+    req.userId = data.id;
     const userInfo = await User.findUserById(data.id);
 
     req.user = {

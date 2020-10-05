@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 const contactsRouter = require('./api/contacts/contacts.router');
 const authRouter = require('./api/auth/auth.router');
 
+const path = require('path');
+
 const runServer = async () => {
   try {
     await mongoose.connect(process.env.DB_URI, {
@@ -18,6 +20,8 @@ const runServer = async () => {
     console.log('Database connection successful');
 
     const app = express();
+
+    app.use('/', express.static(path.resolve(__dirname, 'public')));
 
     app.use(express.json());
     app.use(cors({ origin: 'http://localhost:3000' }));

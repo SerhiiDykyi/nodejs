@@ -5,7 +5,6 @@ const { createVerificationToken } = require('../../services/token.service');
 const registrationContoller = async (req, res, next) => {
   try {
     const { body } = req;
-    console.log(body);
     const hachedPassword = await bcrypt.hash(body.password, +process.env.SALT);
     const newUser = await UserDB.createUser({
       ...body,
@@ -24,6 +23,41 @@ const registrationContoller = async (req, res, next) => {
       next(error);
       return;
     }
+    res.status(400).json({ message: 'missing required name field' });
+
+    next(error);
+  }
+};
+
+const avatarRegistrationContoller = async (req, res, next) => {
+  try {
+    // const {
+    //   body: { email, password },
+    // } = req;
+    const file = req.file;
+    console.log('file :', file);
+    res.send(`http://localhost:3000/avatars/${file.filename}`);
+    // const user = await UserDB.findUserByEmail({ email });
+    // if (!user) {
+    //   return res.status(400).json({ message: `Email or password is wrong` });
+    // }
+    // const isPasswordsEqual = await bcrypt.compare(password, user.password);
+    // if (!isPasswordsEqual) {
+    //   return res.status(401).json({ message: `Email or password is wrong` });
+    // }
+    // const access_token = await createVerificationToken({ id: user._id });
+    // await UserDB.updateUser(user._id, {
+    //   token: access_token,
+    // });
+
+    // res.status(201).json({
+    //   token: access_token,
+    //   user: {
+    //     email: user.email,
+    //     subscription: user.subscription,
+    //   },
+    // });
+  } catch (error) {
     res.status(400).json({ message: 'missing required name field' });
 
     next(error);
@@ -69,7 +103,7 @@ const logoutContoller = async (req, res, next) => {
     } = req;
 
     const userById = await UserDB.findUserById({ _id: id });
-    console.log(userById.token);
+
     if (!userById.token) {
       res.status(401).json({ message: 'No autorization' });
       return;
@@ -143,4 +177,5 @@ module.exports = {
   logoutContoller,
   getCurrentUserController,
   renewalSubContoller,
+  avatarRegistrationContoller,
 };
