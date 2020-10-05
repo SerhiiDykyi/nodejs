@@ -29,6 +29,10 @@ const runServer = async () => {
     app.use('/contacts', contactsRouter);
     app.use('/auth', authRouter);
     app.use('/users', authRouter);
+    app.use(
+      '/images',
+      express.static(path.resolve(__dirname, 'public/images')),
+    );
 
     app.use(async (err, req, res, next) => {
       if (err) {
@@ -42,6 +46,7 @@ const runServer = async () => {
         });
         logs = JSON.stringify(logs);
         console.error(err);
+        res.status(500).send(err.message);
         return await fs.writeFile('errors.logs.json', logs);
       }
       console.log('No error');

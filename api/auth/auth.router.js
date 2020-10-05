@@ -6,7 +6,7 @@ const {
   logoutContoller,
   getCurrentUserController,
   renewalSubContoller,
-  avatarRegistrationContoller,
+  uploadAvatarContoller,
 } = require('./auth.controller');
 const {
   checkAuthTokenMiddleware,
@@ -27,13 +27,14 @@ authRouter.post(
   registrationContoller,
 );
 
-authRouter.post(
-  '/avatar',
+authRouter.post('/avatar', checkAuthTokenMiddleware, avatarUploaderMiddleware);
+authRouter.post('/login', loginValidatorMiddleware, loginContoller);
+authRouter.patch(
+  '/avatars',
   checkAuthTokenMiddleware,
   avatarUploaderMiddleware,
-  avatarRegistrationContoller,
+  uploadAvatarContoller,
 );
-authRouter.post('/login', loginValidatorMiddleware, loginContoller);
 authRouter.post('/logout', checkAuthTokenMiddleware, logoutContoller);
 authRouter.get(
   '/current',
