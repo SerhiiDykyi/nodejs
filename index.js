@@ -62,3 +62,5 @@ const runServer = async () => {
 };
 
 runServer();
+
+module.exports = { runServer };
