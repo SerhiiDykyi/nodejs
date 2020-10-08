@@ -1,9 +1,11 @@
 const multer = require('multer');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const avatarUploader = () => {
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'public/images');
+      cb(null, `${process.env.PUBLIC_FOLDER}/${process.env.IMAGE_FOLDER}`);
     },
     filename: function (req, file, cb) {
       const fileType = file.mimetype.split('/')[1];

@@ -21,17 +21,24 @@ const runServer = async () => {
 
     const app = express();
 
-    app.use('/', express.static(path.resolve(__dirname, 'public')));
-
     app.use(express.json());
-    app.use(cors({ origin: 'http://localhost:3000' }));
+    app.use(
+      cors({
+        origin: `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}`,
+      }),
+    );
 
     app.use('/contacts', contactsRouter);
     app.use('/auth', authRouter);
     app.use('/users', authRouter);
     app.use(
       '/images',
-      express.static(path.resolve(__dirname, 'public/images')),
+      express.static(
+        path.resolve(
+          __dirname,
+          `${process.env.PUBLIC_FOLDER}/${process.env.IMAGE_FOLDER}`,
+        ),
+      ),
     );
 
     app.use(async (err, req, res, next) => {

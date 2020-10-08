@@ -1,25 +1,32 @@
 const UserDB = require('./auth.model');
 const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
+dotenv.config();
 const { createVerificationToken } = require('../../services/token.service');
-const { avatar } = require('../../services/avatar.services');
+const {
+  madeAvatar,
+  createAvatarUrl,
+} = require('../../services/avatar.services');
 
 const registrationContoller = async (req, res, next) => {
   try {
     const { body } = req;
-    const variant = 'female';
-    const image = await avatar.generate(`${body.email}`, variant);
-    image.png().toFile(`public/images/${body.email}.png`);
 
     const hachedPassword = await bcrypt.hash(body.password, +process.env.SALT);
     const newUser = await UserDB.createUser({
       ...body,
-      avatarURL: `http:3000/images/${body.email}.png`,
       password: hachedPassword,
+    });
+    const currenUserById = await UserDB.findUserById(newUser._id);
+    madeAvatar(newUser._id);
+    const currenUserWithAvatar = await UserDB.updateUser(currenUserById._id, {
+      avatarURL: createAvatarUrl(newUser._id),
     });
     res.status(201).json({
       user: {
+        id: newUser._id,
         email: newUser.email,
-        avatarURL: newUser.avatarURL,
+        avatarURL: `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/${process.env.IMAGE_FOLDER}/${currenUserWithAvatar.id}.png`,
         subscription: newUser.subscription,
       },
     });
@@ -162,7 +169,7 @@ const uploadAvatarContoller = async (req, res, next) => {
       });
       return;
     }
-    const avatarURL = `http://localhost:3000/images/${file.filename}`;
+    const avatarURL = `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/${process.env.IMAGE_FOLDER}/${file.filename}`;
     const renewalUserSub = await UserDB.updateUser(userById._id, {
       avatarURL,
     });
