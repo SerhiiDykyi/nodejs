@@ -6,16 +6,18 @@ const {
   logoutContoller,
   getCurrentUserController,
   renewalSubContoller,
+  verifyTokenController,
 } = require('./auth.controller');
 const {
   checkAuthTokenMiddleware,
 } = require('../../middlewares/auth.middleware');
-
 const {
   registrationValidatorMiddleware,
   loginValidatorMiddleware,
 } = require('./auth.validator');
 
+// const { sendEmail } = require('../../services/mail.service');
+authRouter.get('/verify/:verificationToken', verifyTokenController);
 authRouter.post(
   '/register',
   registrationValidatorMiddleware,

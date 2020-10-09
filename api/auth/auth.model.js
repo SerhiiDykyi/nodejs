@@ -19,6 +19,11 @@ const userSchema = new mongoose.Schema(
     token: {
       type: String,
     },
+    verificationToken: {
+      type: String,
+      required: true,
+      default: true,
+    },
   },
   {
     versionKey: false,
@@ -46,6 +51,9 @@ class User {
 
   findUserById = async userId => {
     return await this.db.findById(userId);
+  };
+  findUserByToken = async token => {
+    return await this.db.findOne(token);
   };
 }
 
