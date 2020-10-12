@@ -18,7 +18,7 @@ const registrationContoller = async (req, res, next) => {
       password: hachedPassword,
     });
     const currenUserById = await UserDB.findUserById(newUser._id);
-    madeAvatar(newUser._id);
+    await madeAvatar(newUser._id);
     const currenUserWithAvatar = await UserDB.updateUser(currenUserById._id, {
       avatarURL: createAvatarUrl(newUser._id),
     });
