@@ -9,10 +9,10 @@ const {
   verifyTokenController,
   uploadAvatarContoller
 } = require('./auth.controller');
+const {avatarUploaderMiddleware}=require('../../middlewares/fileUploader.middleware')
 const {
   checkAuthTokenMiddleware,
 } = require('../../middlewares/auth.middleware');
-const {avatarUploaderMiddleware}=require('../../middlewares/fileUploader.middleware')
 const {
   registrationValidatorMiddleware,
   loginValidatorMiddleware,
@@ -24,7 +24,6 @@ authRouter.post(
   registrationValidatorMiddleware,
   registrationContoller,
 );
-
 authRouter.post('/avatar', checkAuthTokenMiddleware, avatarUploaderMiddleware);
 authRouter.post('/login', loginValidatorMiddleware, loginContoller);
 authRouter.patch(
@@ -33,6 +32,7 @@ authRouter.patch(
   avatarUploaderMiddleware,
   uploadAvatarContoller,
 );
+
 authRouter.post('/logout', checkAuthTokenMiddleware, logoutContoller);
 authRouter.get(
   '/current',
