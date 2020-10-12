@@ -7,7 +7,9 @@ const {
   getCurrentUserController,
   renewalSubContoller,
   verifyTokenController,
+  uploadAvatarContoller
 } = require('./auth.controller');
+const {avatarUploaderMiddleware}=require('../../middlewares/fileUploader.middleware')
 const {
   checkAuthTokenMiddleware,
 } = require('../../middlewares/auth.middleware');
@@ -21,6 +23,13 @@ authRouter.post(
   '/register',
   registrationValidatorMiddleware,
   registrationContoller,
+);
+authRouter.post('/avatar', checkAuthTokenMiddleware, avatarUploaderMiddleware);
+authRouter.patch(
+  '/avatar',
+  checkAuthTokenMiddleware,
+  avatarUploaderMiddleware,
+  uploadAvatarContoller,
 );
 authRouter.post('/login', loginValidatorMiddleware, loginContoller);
 authRouter.post('/logout', checkAuthTokenMiddleware, logoutContoller);

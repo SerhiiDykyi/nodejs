@@ -7,6 +7,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const contactsRouter = require('./api/contacts/contacts.router');
 const authRouter = require('./api/auth/auth.router');
+const path = require('path');
 
 const runServer = async () => {
   try {
@@ -20,12 +21,24 @@ const runServer = async () => {
     const app = express();
 
     app.use(express.json());
-    app.use(cors({ origin: 'http://localhost:3000' }));
+    app.use(
+      cors({
+        origin: `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}`,
+      }),
+    );
 
     app.use('/contacts', contactsRouter);
     app.use('/auth', authRouter);
     app.use('/users', authRouter);
-
+app.use(
+      '/images',
+      express.static(
+        path.resolve(
+          __dirname,
+          `${process.env.PUBLIC_FOLDER}/${process.env.IMAGE_FOLDER}`,
+        ),
+      ),
+    );
     app.use(async (err, req, res, next) => {
       if (err) {
         let logs = await fs.readFile('errors.logs.json', { encoding: 'utf-8' });

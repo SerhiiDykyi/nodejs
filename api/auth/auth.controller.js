@@ -5,7 +5,7 @@ const {
   createEmailToken,
   checkEmailToken,
 } = require('../../services/token.service');
-
+const {madeAvatar, createAvatarUrl}=require('../../services/avatar.services')
 const token = createEmailToken();
 
 const { sendEmail } = require('../../services/mail.service');
@@ -24,9 +24,16 @@ const registrationContoller = async (req, res, next) => {
       verificationToken: token,
       password: hachedPassword,
     });
+    const currenUserById = await UserDB.findUserById(newUser._id);
+    await madeAvatar(newUser._id);
+    const currenUserWithAvatar = await UserDB.updateUser(currenUserById._id, {
+      avatarURL: createAvatarUrl(newUser._id),
+    });
     res.status(201).json({
       user: {
+        id: newUser._id,
         email: newUser.email,
+        avatarURL: `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/${process.env.IMAGE_FOLDER}/${currenUserWithAvatar.id}.png`,
         subscription: newUser.subscription,
       },
     });
@@ -177,6 +184,36 @@ const verifyTokenController = async (req, res, next) => {
     next(error);
   }
 };
+const uploadAvatarContoller = async (req, res, next) => {
+  try {
+    const {
+      user: { id },
+    } = req;
+    const { file } = req;
+
+    const userById = await UserDB.findUserById({ _id: id });
+
+    if (!userById.token) {
+      res.status(401).json({ message: 'No autorization' });
+      return;
+    }
+
+    if (!file) {
+      res.status(400).json({
+        message: `Avatar not found`,
+      });
+      return;
+    }
+    const avatarURL = `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/${process.env.IMAGE_FOLDER}/${file.filename}`;
+    const renewalUserSub = await UserDB.updateUser(userById._id, {
+      avatarURL,
+    });
+    return res.status(200).json(renewalUserSub);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 module.exports = {
   registrationContoller,
@@ -184,5 +221,5 @@ module.exports = {
   logoutContoller,
   getCurrentUserController,
   renewalSubContoller,
-  verifyTokenController,
+  verifyTokenController,uploadAvatarContoller
 };
