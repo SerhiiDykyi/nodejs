@@ -11,6 +11,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    avatarURL: {
+      type: String,
+    },
     subscription: {
       type: String,
       enum: ['free', 'pro', 'premium'],
