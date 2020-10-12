@@ -16,7 +16,7 @@ const registrationContoller = async (req, res, next) => {
     const {
       body: { email },
     } = req;
-    sendEmail(email, token);
+    await sendEmail(email, token);
     req.userToken = token;
     const hachedPassword = await bcrypt.hash(body.password, +process.env.SALT);
     const newUser = await UserDB.createUser({
@@ -52,7 +52,7 @@ const loginContoller = async (req, res, next) => {
     if (!user) {
       return res.status(400).json({ message: `Email or password is wrong` });
     }
-    if (user.verificationToken) {
+    if (!user.verificationToken) {
       return res.status(404).json({ message: `Please verify you account` });
     }
     const isPasswordsEqual = await bcrypt.compare(password, user.password);

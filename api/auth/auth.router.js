@@ -16,7 +16,6 @@ const {
   loginValidatorMiddleware,
 } = require('./auth.validator');
 
-// const { sendEmail } = require('../../services/mail.service');
 authRouter.get('/verify/:verificationToken', verifyTokenController);
 authRouter.post(
   '/register',
