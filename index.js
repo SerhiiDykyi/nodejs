@@ -7,6 +7,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const contactsRouter = require('./api/contacts/contacts.router');
 const authRouter = require('./api/auth/auth.router');
+
 const path = require('path');
 
 const runServer = async () => {
@@ -39,6 +40,7 @@ const runServer = async () => {
         ),
       ),
     );
+
     app.use(async (err, req, res, next) => {
       if (err) {
         let logs = await fs.readFile('errors.logs.json', { encoding: 'utf-8' });
@@ -51,6 +53,7 @@ const runServer = async () => {
         });
         logs = JSON.stringify(logs);
         console.error(err);
+        res.status(500).send(err.message);
         return await fs.writeFile('errors.logs.json', logs);
       }
       console.log('No error');
@@ -66,3 +69,5 @@ const runServer = async () => {
 };
 
 runServer();
+
+module.exports = { runServer };
