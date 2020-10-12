@@ -1,4 +1,6 @@
-img
-.env
+
+
+
 node_modules
-README.md
+/img
+/.env
