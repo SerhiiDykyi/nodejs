@@ -1,20 +1,27 @@
 const UserDB = require('./auth.model');
 const bcrypt = require('bcrypt');
-const dotenv = require('dotenv');
-dotenv.config();
-const { createVerificationToken } = require('../../services/token.service');
 const {
-  madeAvatar,
-  createAvatarUrl,
-} = require('../../services/avatar.services');
+  createVerificationToken,
+  createEmailToken,
+  checkEmailToken,
+} = require('../../services/token.service');
+
+const token = createEmailToken();
+
+const { sendEmail } = require('../../services/mail.service');
 
 const registrationContoller = async (req, res, next) => {
   try {
     const { body } = req;
-
+    const {
+      body: { email },
+    } = req;
+    await sendEmail(email, token);
+    req.userToken = token;
     const hachedPassword = await bcrypt.hash(body.password, +process.env.SALT);
     const newUser = await UserDB.createUser({
       ...body,
+      verificationToken: token,
       password: hachedPassword,
     });
     const currenUserById = await UserDB.findUserById(newUser._id);
@@ -52,6 +59,9 @@ const loginContoller = async (req, res, next) => {
     if (!user) {
       return res.status(400).json({ message: `Email or password is wrong` });
     }
+    if (!user.verificationToken) {
+      return res.status(404).json({ message: `Please verify you account` });
+    }
     const isPasswordsEqual = await bcrypt.compare(password, user.password);
     if (!isPasswordsEqual) {
       return res.status(401).json({ message: `Email or password is wrong` });
@@ -82,7 +92,6 @@ const logoutContoller = async (req, res, next) => {
     } = req;
 
     const userById = await UserDB.findUserById({ _id: id });
-
     if (!userById.token) {
       res.status(401).json({ message: 'No autorization' });
       return;
@@ -179,11 +188,37 @@ const uploadAvatarContoller = async (req, res, next) => {
   }
 };
 
+const verifyTokenController = async (req, res, next) => {
+  try {
+    const {
+      params: { verificationToken },
+    } = req;
+
+    const isValidToken = checkEmailToken(verificationToken);
+
+    if (!isValidToken) {
+      return res.status(400).json({ message: `User not found` });
+    }
+    const userByToken = await UserDB.findUserByToken({ verificationToken });
+    if (!userByToken) {
+      return res.status(400).json({ message: `User not found` });
+    }
+    await UserDB.updateUser(userByToken._id, {
+      verificationToken: false,
+    });
+    res.status(200).json('ok');
+  } catch (error) {
+    res.status(400).json({ message: 'Shit happe' });
+
+    next(error);
+  }
+};
+
 module.exports = {
   registrationContoller,
   loginContoller,
   logoutContoller,
   getCurrentUserController,
   renewalSubContoller,
-  uploadAvatarContoller,
+  verifyTokenController,
 };

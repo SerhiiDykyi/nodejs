@@ -1,4 +1,4 @@
-/node_modules/
-img
-/.env
-/contacts.js
+/node_modules
+.env
+/img
+
