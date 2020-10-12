@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 const path = require('path');
-const AvatarGenerator = require('avatar-generator');
+const AvatarGenerator =require('avatar-generator')
 
 const createAvatarUrl = id =>
   `${process.env.PUBLIC_FOLDER}/${process.env.IMAGE_FOLDER}/${id}.png`;

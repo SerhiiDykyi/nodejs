@@ -7,10 +7,12 @@ const {
   getCurrentUserController,
   renewalSubContoller,
   verifyTokenController,
+  uploadAvatarContoller
 } = require('./auth.controller');
 const {
   checkAuthTokenMiddleware,
 } = require('../../middlewares/auth.middleware');
+const {avatarUploaderMiddleware}=require('../../middlewares/fileUploader.middleware')
 const {
   registrationValidatorMiddleware,
   loginValidatorMiddleware,

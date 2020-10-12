@@ -5,7 +5,7 @@ const {
   createEmailToken,
   checkEmailToken,
 } = require('../../services/token.service');
-
+const {madeAvatar, createAvatarUrl}=require('../../services/avatar.services')
 const token = createEmailToken();
 
 const { sendEmail } = require('../../services/mail.service');
@@ -221,4 +221,5 @@ module.exports = {
   getCurrentUserController,
   renewalSubContoller,
   verifyTokenController,
+  uploadAvatarContoller
 };
