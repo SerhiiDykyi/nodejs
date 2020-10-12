@@ -213,6 +213,36 @@ const verifyTokenController = async (req, res, next) => {
     next(error);
   }
 };
+const uploadAvatarContoller = async (req, res, next) => {
+  try {
+    const {
+      user: { id },
+    } = req;
+    const { file } = req;
+
+    const userById = await UserDB.findUserById({ _id: id });
+
+    if (!userById.token) {
+      res.status(401).json({ message: 'No autorization' });
+      return;
+    }
+
+    if (!file) {
+      res.status(400).json({
+        message: `Avatar not found`,
+      });
+      return;
+    }
+    const avatarURL = `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/${process.env.IMAGE_FOLDER}/${file.filename}`;
+    const renewalUserSub = await UserDB.updateUser(userById._id, {
+      avatarURL,
+    });
+    return res.status(200).json(renewalUserSub);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 module.exports = {
   registrationContoller,
