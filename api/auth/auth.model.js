@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-     avatarURL: {
+    avatarURL: {
       type: String,
     },
     subscription: {

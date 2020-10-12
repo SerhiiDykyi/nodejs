@@ -221,5 +221,6 @@ module.exports = {
   logoutContoller,
   getCurrentUserController,
   renewalSubContoller,
-  verifyTokenController,uploadAvatarContoller
+  verifyTokenController,
+  uploadAvatarContoller
 };

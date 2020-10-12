@@ -25,13 +25,14 @@ authRouter.post(
   registrationContoller,
 );
 authRouter.post('/avatar', checkAuthTokenMiddleware, avatarUploaderMiddleware);
+authRouter.post('/login', loginValidatorMiddleware, loginContoller);
 authRouter.patch(
-  '/avatar',
+  '/avatars',
   checkAuthTokenMiddleware,
   avatarUploaderMiddleware,
   uploadAvatarContoller,
 );
-authRouter.post('/login', loginValidatorMiddleware, loginContoller);
+
 authRouter.post('/logout', checkAuthTokenMiddleware, logoutContoller);
 authRouter.get(
   '/current',

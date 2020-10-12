@@ -30,7 +30,7 @@ const runServer = async () => {
     app.use('/contacts', contactsRouter);
     app.use('/auth', authRouter);
     app.use('/users', authRouter);
-app.use(
+    app.use(
       '/images',
       express.static(
         path.resolve(
