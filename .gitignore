@@ -1,4 +1,4 @@
 /node_modules/
 img
-.env
+/.env
 /contacts.js
