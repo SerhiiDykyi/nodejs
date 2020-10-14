@@ -11,7 +11,7 @@ const sendEmail = async (email, token) => {
       text: 'and easy to do anywhere, even with Node.js',
       html: `<a href="${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/auth/verify/${token}">You need verefy email!!!<a>`,
     };
-    const res = await sgMail.send(msg);
+    await sgMail.send(msg);
   } catch (error) {
     console.log(error);
   }

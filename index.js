@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const fs = require('fs').promises;
 const PORT = process.env.PORT || 3000;
+const {createURL}=require('./config')
 const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -24,7 +25,7 @@ const runServer = async () => {
     app.use(express.json());
     app.use(
       cors({
-        origin: `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}`,
+        origin: createURL(PORT),
       }),
     );
 
