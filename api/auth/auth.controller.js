@@ -18,7 +18,7 @@ const registrationContoller = async (req, res, next) => {
       body: { email },
     } = req;
     await sendEmail(email, token);
-    // req.userToken = token;
+
     const hachedPassword = await bcrypt.hash(body.password, +process.env.SALT);
     const newUser = await UserDB.createUser({
       ...body,
@@ -36,7 +36,6 @@ const registrationContoller = async (req, res, next) => {
         email: newUser.email,
         avatarURL: createAvatarUrl(currenUserWithAvatar.id),
         subscription: newUser.subscription,
-        token: newUser.verificationToken,
       },
     });
   } catch (error) {
